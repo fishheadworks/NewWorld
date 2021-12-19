@@ -8,18 +8,6 @@
         Lobby = 3
     }
 
-    public enum eColor
-    {
-        White,
-        Red,
-        Grey,
-        Black,
-        Green,
-        Yellow,
-        Cyan,
-        Brown
-    }
-
     public enum DeviceType
     {
         Android,

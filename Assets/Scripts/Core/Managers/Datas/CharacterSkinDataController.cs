@@ -18,8 +18,8 @@ public class CharacterSkinDataController : MonoBehaviour
     [Space(10)]
     public BaseData baseData = new BaseData();
 
-    [Header("▼ Player-Owned Character")]
-    public List<SkinData> listSkins = new List<SkinData>();
+    [Header("▼ Player Characters Info")]
+    public DataOnServer listSkins = new DataOnServer();
 
     [System.Serializable]
     // ▼ SkinBaseData의 콜렉션
@@ -28,15 +28,7 @@ public class CharacterSkinDataController : MonoBehaviour
         public List<CharacterSkinBaseData> listCharacterSkin = new List<CharacterSkinBaseData>();
     }
 
-    // ▼ Character Data
-    [System.Serializable]
-    public class SkinData : CharacterSkinBaseData
-    {
-        [JsonConverter(typeof(int))]
-        public int Quantity = 0;
-    }
-
-    // ▼ Character Data의 기본 형태
+    // ▼ Character Skin Data의 기본 형태
     [System.Serializable]
     public class CharacterSkinBaseData
     {
@@ -62,6 +54,24 @@ public class CharacterSkinDataController : MonoBehaviour
         public int Price = 0;
     }
 
+
+    // ▼ 현재 사용 중인 캐릭터와 보유하고 있는 캐릭터 스킨 리스트
+    [System.Serializable]
+    public class DataOnServer
+    {
+        [JsonConverter(typeof(string))]
+        public string UsedCharacterSkinID = "";
+
+        public List<CharacterSkinDataOnServer> ListCharacterSkin = new List<CharacterSkinDataOnServer>();
+    }
+
+    // ▼ 현재 갖고있는 캐릭터 스킨 리스트 표시용
+    [System.Serializable]
+    public class CharacterSkinDataOnServer
+    {
+        [JsonConverter(typeof(string))]
+        public string CharacterSkinID = "CharacterSkin_01";
+    }
     #endregion
 
 
@@ -83,12 +93,14 @@ public class CharacterSkinDataController : MonoBehaviour
         {
             // ▼ 데이터 로드 성공시
             baseData = JsonUtility.FromJson<BaseData>(json);
+
+            // ▼ 추후에 서버에서 플레이어의 데이터를 가져오는 함수로 변경
             OnComplete?.Invoke();
 
         },()=>
         {
             // ▼ 데이터 로드 실패시
-            Debug.Log($"{KEYDATAONSERVER}라는 데이터는 {StringUtils.color.Return(Enums.eColor.Red, "존재하지않음.")}");
+        
         });
 
     }

@@ -63,8 +63,7 @@ public class JsonSaveLoad : MonoBehaviour
     {
         if (savedata == null)
         {
-           Debug.Log(StringUtils.color.Return(Enums.eColor.Red, 
-                                              $"Data : {DataName}" + "는 존재하지 않음!. 임시 데이터 생성 완료"));
+           Debug.Log($"Data : {StringUtils.Red(DataName)}는 존재하지 않음! 임시 데이터 생성 완료");
 
            SaveData(new JObject(), $"Created{GetDataSavedTime}Data");
         }
@@ -82,9 +81,10 @@ public class JsonSaveLoad : MonoBehaviour
         return loadData;
     }
 
-    // ▼ 타이틀 데이터가 있을 경우 해당 데이터를 가지고 OnComplete 콜백 실행
+    // ▼ 서버데이터를 가져오는 함수
     public void GetTitleData(string DataName, System.Action<string> OnComplete = null, System.Action OnFail = null)
     {
+        // ▼ 현재 로컬 데이터인데 나중에 서버 데이터로 바꾸기만 하면됨
         JObject loadData = LoadData(DataName);
 
         if (loadData != null)
