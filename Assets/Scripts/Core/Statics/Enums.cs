@@ -19,4 +19,10 @@
         Cyan,
         Brown
     }
+
+    public enum DeviceType
+    {
+        Android,
+        IOS,
+    }
 }

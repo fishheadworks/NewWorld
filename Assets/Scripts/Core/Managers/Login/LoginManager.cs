@@ -1,16 +1,38 @@
 ﻿using UnityEngine;
 using System.IO;
 
-public class LoginManager : MonoBehaviour
+/// <summary>
+/// 
+///  [순서]
+///  
+///  1. 해당 기기로 이전에 접속한 적이 있는지 체크
+///  2. 데이터 매니저들로부터 각각의 데이터를 로드 혹은 생성한다.
+///  3. 모든 데이터를 셋팅하면 게임을 시작한다
+///  
+///  [진현, 21. 12. 19]
+///  
+/// </summary>
+
+public class LoginManager : Singleton<LoginManager>
 {
 
-    void Start()
-    {
+    #region Variables
+    [SerializeField]
+    ProgressBar progressBar;
+    #endregion
 
-        // StartLogin();
+
+    #region Unity Events
+
+    private void Awake()
+    {
+        if(progressBar==null)
+        {
+            progressBar = FindObjectOfType<ProgressBar>();
+        }
     }
 
-    private void StartLogin()
+    private void Start()
     {
         bool isLogginedBefore = PlayerPrefs.GetInt("isLogginedBefore", 0) == 0 ? false : true;
 
@@ -24,23 +46,54 @@ public class LoginManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+
+    #region Login Methods
+    // 현재 디바이스에서 최초 접속 일 경우
     private void FirstLogin()
     {
-        // (+) 서버 데이터에 CustomID Key와 Default Data들을 추가 해주고 로그인하는 코드 필요
-        // [진현, 21. 12. 19]
-       
         PlayerPrefs.SetInt("isLogginedBefore", 1);
         PlayerPrefs.Save();
+        LoadDatas();
+
     }
 
-
-    public void LoginWithCustomID(System.Action onComplete = null, System.Action onFail = null)
+    // 현재 디바이스에서 접속한 기록이 있을 경우
+    private void LoginWithCustomID(System.Action onComplete = null, System.Action onFail = null)
     {
-        
-        // (+) 데이터 시트에서 해당 ID를 Key로 데이터 value들을 가져오는 코드 필요
-        // [진현, 21. 12. 19]
+        LoadDatas();
+    }
+    #endregion
+
+
+
+    #region Data Loading Methods
+
+    [Header("▼ Data List")]
+    public string[] LoadDataSteps;
+
+    // 데이터를 불러온다 [진현, 21. 12. 19]
+    public void LoadDatas()
+    {
+        if(LoadDataSteps==null || LoadDataSteps.Length ==0)
+        {
+            LoadDataSteps = new string[3];
+        }
+
+        progressBar.MaxProgress = LoadDataSteps.Length;
+
+        JsonSaveLoad.Instance.CheckUserID(() =>
+        {
+            progressBar.CurrentProgress++;
+
+            // (+) 다른 모든 데이터 value들을 가져오는 코드 필요
+            // [진현, 21. 12. 19]
+        });
+
     }
 
+    #endregion
 
     public string GetCustomID()
     {

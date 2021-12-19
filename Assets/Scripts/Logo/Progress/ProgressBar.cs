@@ -13,7 +13,7 @@ public class ProgressBar : MonoBehaviour
 
     public int MaxProgress;
 
-    public float CurrentProgress
+    public int CurrentProgress
     {
         get { return CurrentProgress; }
         set
@@ -40,8 +40,11 @@ public class ProgressBar : MonoBehaviour
     #region Progress Methods
     private void UpdateProgress()
     {
-        BarImage.fillAmount = CurrentProgress / MaxProgress;
-        progressTxt.text = $"Loading . . . ({(CurrentProgress / MaxProgress) * 100}%)";
+        if(CurrentProgress<MaxProgress)
+        {
+          BarImage.fillAmount = CurrentProgress/(float)MaxProgress;
+          progressTxt.text = $"Loading . . . ({(CurrentProgress / (float)MaxProgress) * 100}%)";
+        }
     }
 
     #endregion
