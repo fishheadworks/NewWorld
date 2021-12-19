@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 
@@ -13,8 +14,10 @@ using System.IO;
 ///  
 /// </summary>
 
-public class LoginManager : Singleton<LoginManager>
+public class LoginManager : MonoBehaviour
 {
+    public static LoginManager Instance;
+
 
     #region Variables
     [SerializeField]
@@ -26,6 +29,11 @@ public class LoginManager : Singleton<LoginManager>
 
     private void Awake()
     {
+        if(Instance==null)
+        {
+            Instance = this;
+        }
+
         if(progressBar==null)
         {
             progressBar = FindObjectOfType<ProgressBar>();
@@ -78,7 +86,7 @@ public class LoginManager : Singleton<LoginManager>
     {
         if(LoadDataSteps==null || LoadDataSteps.Length ==0)
         {
-            LoadDataSteps = new string[3];
+            LoadDataSteps = new string[2];
         }
 
         progressBar.MaxProgress = LoadDataSteps.Length;
@@ -87,8 +95,16 @@ public class LoginManager : Singleton<LoginManager>
         {
             progressBar.CurrentProgress++;
 
-            // (+) 다른 모든 데이터 value들을 가져오는 코드 필요
-            // [진현, 21. 12. 19]
+            CharacterSkinDataController.Instance.GetBaseDatasList(() =>
+            {
+                progressBar.CurrentProgress++;
+
+
+                // (+) 다른 모든 데이터 value들을 가져오는 코드 필요
+                // [진현, 21. 12. 19]
+
+                SceneManager.LoadSceneAsync("Lobby");
+            });
         });
 
     }

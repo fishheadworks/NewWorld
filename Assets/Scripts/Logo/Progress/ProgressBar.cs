@@ -11,14 +11,16 @@ public class ProgressBar : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI progressTxt;
 
-    public int MaxProgress;
+    private int currentProg = 0;
 
+    public int MaxProgress;
+    
     public int CurrentProgress
     {
-        get { return CurrentProgress; }
+        get { return currentProg; }
         set
         {
-            CurrentProgress = value;
+            currentProg = value;
             UpdateProgress();
         }
     }
@@ -40,10 +42,10 @@ public class ProgressBar : MonoBehaviour
     #region Progress Methods
     private void UpdateProgress()
     {
-        if(CurrentProgress<MaxProgress)
+        if(CurrentProgress<=MaxProgress)
         {
-          BarImage.fillAmount = CurrentProgress/(float)MaxProgress;
-          progressTxt.text = $"Loading . . . ({(CurrentProgress / (float)MaxProgress) * 100}%)";
+          BarImage.fillAmount = currentProg / (float)MaxProgress;
+          progressTxt.text = $"Loading . . . ({(currentProg / (float)MaxProgress) * 100}%)";
         }
     }
 

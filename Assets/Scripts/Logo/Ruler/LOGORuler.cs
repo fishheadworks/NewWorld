@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class LOGORuler : Ruler
 {
     protected override void Init_Status()
@@ -17,7 +17,7 @@ public class LOGORuler : Ruler
 
         // :: 페이드
         POPUPSector.FadeIn(2f, () => {
-            POPUPSector.FadeOut(2f, null, 1f);
+            POPUPSector.FadeOut(2f, null , 1f);
         }, 1f);
     }
 }

@@ -5,7 +5,7 @@
         APP = 0,
         LOGO = 1,
         Login = 2,
-        Main = 3
+        Lobby = 3
     }
 
     public enum eColor
@@ -23,6 +23,6 @@
     public enum DeviceType
     {
         Android,
-        IOS,
+        IOS
     }
 }

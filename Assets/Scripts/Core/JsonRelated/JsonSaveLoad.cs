@@ -5,8 +5,15 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
-public class JsonSaveLoad : Singleton<JsonSaveLoad>
+public class JsonSaveLoad : MonoBehaviour
 {
+
+    public static JsonSaveLoad Instance;
+
+    public static T DeserializeObject<T>(string value)
+    {
+        return JsonConvert.DeserializeObject<T>(value);
+    }
 
     #region Variabels
 
@@ -23,13 +30,23 @@ public class JsonSaveLoad : Singleton<JsonSaveLoad>
 
 
     #region Unity Events
-    public void CheckUserID(System.Action OnComplete=null)
+    private void Start()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+    #endregion
+
+
+    #region Save & Load Methods
+
+    public void CheckUserID(System.Action OnComplete = null)
     {
 
         JObject savedata = LoadData("IDCollections");
 
 
-        if(!((JArray)savedata["UserIDs"]).Contains(SystemInfo.deviceUniqueIdentifier))
+        if (!((JArray)savedata["UserIDs"]).Contains(SystemInfo.deviceUniqueIdentifier))
         {
             // 신규 회원일 경우
             // ▼ 나중에 서버 데이터에서 플레이어의 기본 Title Data를 생성해주는 코드로 변경해야함
@@ -41,11 +58,7 @@ public class JsonSaveLoad : Singleton<JsonSaveLoad>
 
     }
 
-    #endregion 
-
-
-    #region Save & Load Methods
-
+    // ▼ 새로운 Json 만드는 함수
     public void SaveData(JObject savedata, string DataName)
     {
         if (savedata == null)
@@ -57,15 +70,31 @@ public class JsonSaveLoad : Singleton<JsonSaveLoad>
         }
 
         string savestring = JsonConvert.SerializeObject(savedata, Formatting.Indented);
-        File.WriteAllText(Application.dataPath + $"Resources/Datas/{DataName}.json", savestring);
+        File.WriteAllText(Application.dataPath + $"/Scripts/Core/JsonRelated/Datas/{DataName}.json", savestring);
     }
 
+    // ▼ 데이터가 있을 경우 데이터 반환
     public JObject LoadData(string DataName)
     {
-        string loadstring = File.ReadAllText(Application.dataPath + $"Resources/Datas/{DataName}.json");
+        string loadstring = File.ReadAllText(Application.dataPath + $"/Scripts/Core/JsonRelated/Datas/{DataName}.json");
         JObject loadData = JObject.Parse(loadstring);
 
         return loadData;
+    }
+
+    // ▼ 타이틀 데이터가 있을 경우 해당 데이터를 가지고 OnComplete 콜백 실행
+    public void GetTitleData(string DataName, System.Action<string> OnComplete = null, System.Action OnFail = null)
+    {
+        JObject loadData = LoadData(DataName);
+
+        if (loadData != null)
+        {
+            OnComplete?.Invoke(loadData.ToString());
+        }
+        else
+        {
+            OnFail?.Invoke();
+        }
     }
 
     // ▼ 유저 ID (기기 고유 번호)를 Json에 저장한다. [진현, 21. 12. 19]
@@ -78,15 +107,6 @@ public class JsonSaveLoad : Singleton<JsonSaveLoad>
             OnComplete();
     }
 
-    /*
-        savedata["package"] = "wanmok";
-        savedata["UserIDs"] = new JArray();
-        ((JArray)savedata["UserIDs"]).Add(SystemInfo.deviceUniqueIdentifier);
-
-        string savestring = JsonConvert.SerializeObject(savedata, Formatting.Indented);
-        File.WriteAllText(Application.dataPath + "Resources/Datas/IDCollections.json", savestring);
-
-     */
 
     #endregion 
 }

@@ -26,8 +26,13 @@ public class Singleton<T> : MonoBehaviour where T: MonoBehaviour
     // ▼ 만약에 매니저 인스턴스가 없을 시 싱글턴 생성 후 반환 [진현 21. 12. 19]
     private static T SetSingleton()
     {
-        _instance = new GameObject(typeof(T).Name).AddComponent<T>();
-        _instance.transform.position = Vector3.zero;
+        _instance = FindObjectOfType<T>();
+
+        if(_instance==null)
+        {
+         _instance = new GameObject(typeof(T).Name).AddComponent<T>();
+         _instance.transform.position = Vector3.zero;
+        }
 
         DontDestroyOnLoad(_instance);
 
