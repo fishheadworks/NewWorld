@@ -1,17 +1,24 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿///<summary>
+/// 에셋 번들 빌드 스크립트 [진현, 21. 12. 26]
+///</summary>
 
-public class BuildAssetBundles : MonoBehaviour
+#if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public class BuildAssetBundle : MonoBehaviour
 {
-    [MenuItem("Tools/Build AssetBundles")]
-    static void BuildAllAssetBundles()
+    [MenuItem("Wanmok/AssetBundle/Build Bundles")]
+    public static void BuildBundles()
     {
-#if (UNITY_ANDROID)
-        BuildPipeline.BuildAssetBundles("Assets/AssetBundles", BuildAssetBundleOptions.None, BuildTarget.Android);
-#elif (UNITY_IOS)
-    BuildPipeline.BuildAssetBundles("Assets/AssetBundles", BuildAssetBundleOptions.None, BuildTarget.StandaloneOSXUniversal);
-#else
-      BuildPipeline.BuildAssetBundles("Assets/AssetBundles", BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-#endif
+        string buildPath = "Assets/AssetPacks";
+
+        if (!Directory.Exists(buildPath))
+            Directory.CreateDirectory(buildPath);
+
+        BuildPipeline.BuildAssetBundles(buildPath, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
+        AssetDatabase.Refresh();
     }
 }
+#endif
