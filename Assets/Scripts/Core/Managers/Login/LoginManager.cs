@@ -42,7 +42,8 @@ public class LoginManager : MonoBehaviour
 
     private void Start()
     {
-        bool isLogginedBefore = PlayerPrefs.GetInt("isLogginedBefore", 0) == 0 ? false : true;
+        bool isLogginedBefore = 
+            PlayerPrefs.GetInt("isLogginedBefore", 0) == 0 ? false : true;
 
         if(isLogginedBefore)
         {
@@ -103,7 +104,8 @@ public class LoginManager : MonoBehaviour
                 // (+) 다른 모든 데이터 value들을 가져오는 코드 필요
                 // [진현, 21. 12. 19]
 
-                SceneManager.LoadSceneAsync("Lobby");
+                // :: 임시로 In Game으로 직행 해놓음
+                SceneManager.LoadSceneAsync((int)Enums.eScene.IN_GAME);
             });
         });
 
