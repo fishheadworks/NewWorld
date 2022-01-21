@@ -28,20 +28,20 @@
  *****************************************************************************/
 
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEditor;
+using Spine.Unity.Deprecated;
+using System;
 
-namespace Spine.Unity {
+namespace Spine.Unity.Editor {
+	using Editor = UnityEditor.Editor;
 
-	/// <summary>
-	/// A minimal MaskableGraphic subclass for rendering multiple submeshes
-	/// at a <see cref="SkeletonGraphic"/>.
-	/// </summary>
-	[RequireComponent(typeof(CanvasRenderer))]
-	public class SkeletonSubmeshGraphic : MaskableGraphic {
-		public override void SetMaterialDirty () { }
-		public override void SetVerticesDirty () { }
-		protected override void OnPopulateMesh (VertexHelper vh) {
-			vh.Clear();
+	[Obsolete("The spine-unity 3.7 runtime introduced SkeletonDataModifierAssets BlendModeMaterials which replaced SlotBlendModes. Will be removed in spine-unity 3.9.", false)]
+	public class SlotBlendModesEditor : Editor {
+
+		[MenuItem("CONTEXT/SkeletonRenderer/Add Slot Blend Modes Component")]
+		static void AddSlotBlendModesComponent (MenuCommand command) {
+			var skeletonRenderer = (SkeletonRenderer)command.context;
+			skeletonRenderer.gameObject.AddComponent<SlotBlendModes>();
 		}
 	}
 }
